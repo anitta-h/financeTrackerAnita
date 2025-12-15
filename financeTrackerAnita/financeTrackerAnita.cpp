@@ -135,7 +135,77 @@ void search() {
 
 
 void sort() {
-    //TODO
+    char type[12];
+    cout << "sort ";
+    cin >> type;
+
+    int idx[MAX_MONTHS];
+    for (int i = 0; i < monthsCount; i++) {
+        idx[i] = i;
+    }
+
+    for (int i = 0; i < monthsCount - 1; i++) {
+        for (int j = i + 1; j < monthsCount; j++) {
+            if (!hasInfo[idx[i]] || !hasInfo[idx[j]]) {
+                continue;
+            }
+
+            double val1 = 0, val2 = 0;
+
+            if (compareFirst3(type, "inc")) { 
+                val1 = income[idx[i]];
+                val2 = income[idx[j]];
+            }
+            else if (compareFirst3(type, "exp")) {
+                val1 = expense[idx[i]];
+                val2 = expense[idx[j]];
+            }
+            else if (compareFirst3(type, "bal")) {
+                val1 = income[idx[i]] - expense[idx[i]];
+                val2 = income[idx[j]] - expense[idx[j]];
+            }
+            else {
+                cout << "Invalid sort type!\n";
+                return;
+            }
+
+            if (val2 > val1) {
+                int temp = idx[i];
+                idx[i] = idx[j];
+                idx[j] = temp;
+            }
+        }
+    }
+
+    cout << "Sorted by monthly " << type << ":\n";
+
+    int count = 0;
+    for (int i = 0; i < monthsCount && count < 3; i++) {
+        int idxMonth = idx[i];
+        if (!hasInfo[idxMonth]) continue;
+
+        double value = 0;
+        if (compareFirst3(type, "inc")) value = income[idxMonth];
+        else if (compareFirst3(type, "exp")) value = expense[idxMonth];
+        else if (compareFirst3(type, "bal")) value = income[idxMonth] - expense[idxMonth];
+
+        char signChar = (compareFirst3(type, "bal") && value >= 0) ? '+' : '\0';
+
+        cout << count + 1 << ". " << monthNames[idxMonth] << ": ";
+        if (signChar != '\0') cout << signChar;
+        cout << value << endl;
+
+        count++;
+    }
+
+}
+
+void forecast() {
+    //todo
+}
+
+void chart() {
+    //todo
 }
 
 
