@@ -6,7 +6,7 @@ int monthsCount = 0;
 double income[MAX_MONTHS];
 double expense[MAX_MONTHS];
 bool hasInfo[MAX_MONTHS];
-string monthNames[12] = {
+const char* monthNames[12] = {
     "Jan", "Feb", "Mar", "Apr", "May", "Jun",
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
@@ -22,8 +22,14 @@ double absDifference(double num1, double num2) {
 
 void setup() {
 
-    cout<<"Enter number of months: ";
-    cin>> monthsCount;
+    cout << "Enter number of months: ";
+    cin >> monthsCount;
+
+    for (int i = 0; i < monthsCount; i++) {
+        income[i] = 0;
+        expense[i] = 0;
+        hasInfo[i] = false;
+    }
 
     cout << "Profile created successfully.\n";
 }
@@ -34,15 +40,24 @@ void add() {
     cout << "Month: ";
     cin >> month;
 
+    if (month < 1 || month > monthsCount) {
+        cout << "Invalid month!\n";
+        return;
+    }
+
+    int index = month - 1;
+
     cout << "Enter income: ";
-    cin >> income;
+    cin >> income[index];
 
     cout << "Enter expense: ";
-    cin >> expense;
+    cin >> expense[index];
 
-    double balanceForMonth = absDifference(income,expense);
-    char sign = (balanceForMonth >= 0) ? '+' : '-';
-    cout << "Result: Balance for "<<month<<" = "<<sign <<balanceForMonth;
+    hasInfo[index] = true;
+
+    double balanceForMonth = income[index] - expense[index];
+    cout << "Result: Balance for " << month << " = "
+        << (balanceForMonth >= 0 ? "+" : "") << balanceForMonth << endl;
 }
 
 
