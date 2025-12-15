@@ -11,12 +11,11 @@ const char* monthNames[12] = {
     "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
 };
 
-double absDifference(double num1, double num2) {
-    double diff = num1 - num2;
-    if (diff < 0) {
-        return -diff;
+bool compareFirst3(const char* a, const char* b) {
+    for (int i = 0; i < 3; i++) {
+        if (a[i] != b[i]) return false;
     }
-    return diff;
+    return true; 
 }
 
 
@@ -99,8 +98,41 @@ int count = 0;
     }
 
 void search() {
-    //TODO
-}
+     char monthSearch[10];
+    cout << "Search ";
+    cin >> monthSearch;
+
+    int index = -1;
+
+    for (int i = 0; i < monthsCount; i++) {
+        if (compareFirst3(monthSearch, monthNames[i])) {
+            index = i;
+            break;
+        }
+    }
+
+    if (index == -1) {
+        cout << "Invalid month name!\n";
+        return;
+    }
+    if (!hasInfo[index]) {
+        cout << "There is no data for this month.\n";
+        return;
+    }
+
+    double balance = income[index] - expense[index];
+    double ratio = 0.0;
+
+    if(income[index] != 0) {
+     ratio = (expense[index] / income[index]) * 100;
+    }
+    
+    cout << "Income: " << income[index] << endl;
+    cout << "Expense: " << expense[index] << endl;
+    cout << "Balance: " << (balance >= 0 ? "+" : "") << balance << endl;
+    cout << "Expense ratio: " << ratio << "%\n";
+    }
+
 
 void sort() {
     //TODO
