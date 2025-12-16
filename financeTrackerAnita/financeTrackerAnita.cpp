@@ -61,9 +61,9 @@ void add() {
 
 
 void report() {
-double totalIncome;
-double totalExpenses;
-double totalBalance;
+double totalIncome = 0;
+double totalExpenses = 0;
+double totalBalance = 0;
 
 int count = 0;
 
@@ -78,8 +78,8 @@ int count = 0;
             totalBalance = totalBalance + balance;
 
             cout << monthNames[i] << " | " 
-            << income[i] << + " | "
-            << expense[i] << + " | "
+            << income[i] << " | "
+            << expense[i] << " | "
             << (balance >= 0 ? "+" : "") << balance << endl;
 
             count++;
@@ -201,7 +201,47 @@ void sort() {
 }
 
 void forecast() {
-    //todo
+    int monthsAhead;
+    cout << "Months ahead: ";
+    cin >> monthsAhead;
+
+    double savings = 0;
+    int count = 0;
+
+    for (int i = 0; i < monthsAhead; i++) {
+        if (hasInfo[i]) {
+            savings = savings + income[i] - expense[i];
+            count++;
+        }
+    }
+
+    if (count == 0) {
+        cout <<"No data.\n";
+        return;
+    }
+
+    double avg = savings/count;
+
+    cout << "Current savings: " << savings << endl;
+    cout << "Average manthly change: ";
+    if (avg >= 0) {
+        cout << "+";
+    }
+
+    if (avg >= 0) {
+        cout << "Predicted savings after " << monthsAhead
+        << " months: " << savings + monthsAhead * avg << endl;
+    }
+    else {
+        int runOutOfMoney = 0;
+        double temp = savings;
+        while (temp > 0) {
+            temp += avg;
+            runOutOfMoney++;
+        }
+        cout << "Expected to run out of money after "
+            << runOutOfMoney << " months.\n";
+    }
 }
 
 void chart() {
