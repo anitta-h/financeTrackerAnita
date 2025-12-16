@@ -1,14 +1,14 @@
 #include <iostream>
 using namespace std;
-
+//CHART, MAIN, DOUBLE .00
 const int MAX_MONTHS = 12;
 int monthsCount = 0;
 double income[MAX_MONTHS];
 double expense[MAX_MONTHS];
 bool hasInfo[MAX_MONTHS];
 const char* monthNames[12] = {
-    "Jan", "Feb", "Mar", "Apr", "May", "Jun",
-    "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"
+    "January", "February", "March", "April", "May", "Jun",
+    "July", "August", "September", "October", "November", "December"
 };
 
 bool compareFirst3(const char* a, const char* b) {
@@ -16,6 +16,14 @@ bool compareFirst3(const char* a, const char* b) {
         if (a[i] != b[i]) return false;
     }
     return true; 
+}
+void printMonth3(int i) {
+    for (int j = 0; j < 3; j++)
+        cout << monthNames[i][j];
+}
+
+double round2(double x) {
+    return (int)(x * 100 + (x >= 0 ? 0.5 : -0.5)) / 100.0;
 }
 
 
@@ -54,8 +62,8 @@ void add() {
 
     hasInfo[index] = true;
 
-    double balanceForMonth = income[index] - expense[index];
-    cout << "Result: Balance for " << month << " = "
+    double balanceForMonth = round2(income[index] - expense[index]);
+    cout << "Balance for " << month << " = "
         << (balanceForMonth >= 0 ? "+" : "") << balanceForMonth << endl;
 }
 
@@ -73,14 +81,13 @@ int count = 0;
     for (int i = 0; i < monthsCount; i++) {
         if (hasInfo[i]) {
             double balance = income[i] - expense[i];
-            totalIncome = totalIncome + income[i];
-            totalExpenses = totalExpenses + expense[i];
-            totalBalance = totalBalance + balance;
+            totalIncome = round2(totalIncome + income[i]);
+            totalExpenses = round2(totalExpenses + expense[i]);
+            totalBalance = round2(totalBalance + balance);
 
-            cout << monthNames[i] << " | " 
-            << income[i] << " | "
-            << expense[i] << " | "
-            << (balance >= 0 ? "+" : "") << balance << endl;
+            printMonth3(i);
+            cout << " | " << income[i] << " | " << expense[i] << " | "
+                << (balance >= 0 ? "+" : "") << balance << endl;
 
             count++;
         }
@@ -90,7 +97,7 @@ int count = 0;
         if (count > 0) {
             cout << "Total income: " << totalIncome << endl;
             cout << "Total expense: " << totalExpenses << endl;
-            cout << "Average balance: " << totalBalance / count << endl;
+            cout << "Average balance: " << (totalBalance >= 0 ? "+" : "") << totalBalance / count << endl;
         }
         else {
             cout << "No data available.\n";
@@ -124,7 +131,7 @@ void search() {
     double ratio = 0.0;
 
     if(income[index] != 0) {
-     ratio = (expense[index] / income[index]) * 100;
+     ratio = round2((expense[index] / income[index]) * 100);
     }
     
     cout << "Income: " << income[index] << endl;
@@ -191,9 +198,9 @@ void sort() {
 
         char signChar = (compareFirst3(type, "bal") && value >= 0) ? '+' : '\0';
 
-        cout << count + 1 << ". " << monthNames[idxMonth] << ": ";
-        if (signChar != '\0') cout << signChar;
-        cout << value << endl;
+        printMonth3(idxMonth);
+        cout << ": " << (compareFirst3(type, "bal") && value >= 0 ? "+" : "") << value << endl;
+
 
         count++;
     }
@@ -223,14 +230,12 @@ void forecast() {
     double avg = savings/count;
 
     cout << "Current savings: " << savings << endl;
-    cout << "Average manthly change: ";
-    if (avg >= 0) {
-        cout << "+";
-    }
+    cout << "Average monthly change: " << (avg >= 0 ? "+" : "") << round2(avg) << endl;
 
     if (avg >= 0) {
+        double predicted = savings + monthsAhead * avg;
         cout << "Predicted savings after " << monthsAhead
-        << " months: " << savings + monthsAhead * avg << endl;
+        << " months: " << (predicted >= 0 ? "+" : "") << round2(predicted) << endl;
     }
     else {
         int runOutOfMoney = 0;
@@ -243,13 +248,51 @@ void forecast() {
             << runOutOfMoney << " months.\n";
     }
 }
+//TODO
+/*void chart() {
+    const int STEP = 500;
 
-void chart() {
-    //todo
-}
+    double maxIncome = 0;
+    for (int i = 0; i < monthsCount; i++) {
+        if (hasInfo[i] && income[i] > maxIncome)
+            maxIncome = income[i];
+    }
+
+    if (maxIncome == 0) {
+        cout << "No data available.\n";
+        return;
+    }
+
+    cout << "=== YEARLY FINANCIAL CHART ===\n";
+
+    for (int level = (int)maxIncome; level > 0; level -= STEP) {
+        if (level < 1000) cout << "   "; 
+        cout << level << " | ";
+
+        for (int m = 0; m < monthsCount; m++) {
+            if (hasInfo[m] && income[m] >= level)
+                cout << "#   ";
+            else
+                cout << "    ";
+        }
+        cout << endl;
+    }
+
+    cout << "       ";
+    for (int i = 0; i < monthsCount; i++)
+        cout << "----";
+    cout << endl;
+
+    cout << "        ";
+    for (int i = 0; i < monthsCount; i++)
+        cout << monthNames[i][0] << monthNames[i][1] << monthNames[i][2] << " ";
+    cout << endl;
+}*/
+
 
 
 int main()
 {
-    std::cout << "Hello World!\n";
+    char command[10];
+
 }
