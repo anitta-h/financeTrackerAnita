@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="financeTrackerAnita/financeTrackerAnita.vcxproj" />
+  <Project Path="financeTrackerAnita/financeTrackerAnita.vcxproj" Id="fda86d87-f9df-4c23-b30c-6e2517cc1bda" />
 </Solution>

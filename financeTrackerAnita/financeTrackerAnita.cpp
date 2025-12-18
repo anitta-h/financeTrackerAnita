@@ -7,9 +7,18 @@ double income[MAX_MONTHS];
 double expense[MAX_MONTHS];
 bool hasInfo[MAX_MONTHS];
 const char* monthNames[12] = {
-    "January", "February", "March", "April", "May", "Jun",
+    "January", "February", "March", "April", "May", "Junå",
     "July", "August", "September", "October", "November", "December"
 };
+
+bool equals(const char* a, const char* b) {
+    int i = 0;
+    while (a[i] != '\0' && b[i] != '\0') {
+        if (a[i] != b[i]) return false;
+        i++;
+    }
+    return a[i] == '\0' && b[i] == '\0';
+}
 
 bool compareFirst3(const char* a, const char* b) {
     for (int i = 0; i < 3; i++) {
@@ -24,6 +33,17 @@ void printMonth3(int i) {
 
 double round2(double x) {
     return (int)(x * 100 + (x >= 0 ? 0.5 : -0.5)) / 100.0;
+}
+void print2(double x) {
+    x = round2(x);
+
+    int whole = (int)x;
+    int frac = (int)((x - whole) * 100);
+    if (frac < 0) frac = -frac;
+
+    cout << whole << ".";
+    if (frac < 10) cout << "0";
+    cout << frac;
 }
 
 
@@ -64,14 +84,16 @@ void add() {
 
     double balanceForMonth = round2(income[index] - expense[index]);
     cout << "Balance for " << month << " = "
-        << (balanceForMonth >= 0 ? "+" : "") << balanceForMonth << endl;
+        << (balanceForMonth >= 0 ? "+" : ""); 
+        print2(balanceForMonth);
+        cout << endl;
 }
 
 
 void report() {
-double totalIncome = 0;
-double totalExpenses = 0;
-double totalBalance = 0;
+    double totalIncome = 0;
+    double totalExpenses = 0;
+    double totalBalance = 0;
 
 int count = 0;
 
@@ -86,8 +108,14 @@ int count = 0;
             totalBalance = round2(totalBalance + balance);
 
             printMonth3(i);
-            cout << " | " << income[i] << " | " << expense[i] << " | "
-                << (balance >= 0 ? "+" : "") << balance << endl;
+            cout << " | ";
+            print2(income[i]);
+            cout << " | ";
+            print2(income[i]);
+            cout << " | " << (balance >= 0 ? "+" : "");
+            print2(balance);
+            cout << endl;
+
 
             count++;
         }
@@ -95,9 +123,17 @@ int count = 0;
         cout << "----------------------------------\n";
 
         if (count > 0) {
-            cout << "Total income: " << totalIncome << endl;
-            cout << "Total expense: " << totalExpenses << endl;
-            cout << "Average balance: " << (totalBalance >= 0 ? "+" : "") << totalBalance / count << endl;
+            cout << "Total income: ";
+            print2(totalIncome);
+            cout << endl;
+
+            cout << "Total expense: ";
+            print2(totalExpenses);
+            cout << endl;
+
+            cout << "Average balance: " << (totalBalance >= 0 ? "+" : "");
+            print2(totalBalance / count);
+            cout << endl;
         }
         else {
             cout << "No data available.\n";
@@ -134,10 +170,21 @@ void search() {
      ratio = round2((expense[index] / income[index]) * 100);
     }
     
-    cout << "Income: " << income[index] << endl;
-    cout << "Expense: " << expense[index] << endl;
-    cout << "Balance: " << (balance >= 0 ? "+" : "") << balance << endl;
-    cout << "Expense ratio: " << ratio << "%\n";
+    cout << "Income: ";
+    print2(income[index]);
+    cout << endl;
+
+    cout << "Expense: ";
+    print2(expense[index]);
+    cout << endl;
+
+    cout << "Balance: " << (balance >= 0 ? "+" : "");
+    print2(balance);
+    cout << endl;
+
+    cout << "Expense ratio: ";
+    print2(ratio);
+    cout << "%\n";
     }
 
 
@@ -199,8 +246,9 @@ void sort() {
         char signChar = (compareFirst3(type, "bal") && value >= 0) ? '+' : '\0';
 
         printMonth3(idxMonth);
-        cout << ": " << (compareFirst3(type, "bal") && value >= 0 ? "+" : "") << value << endl;
-
+        cout << ": " << (value >= 0 && compareFirst3(type, "bal") ? "+" : "");
+        print2(value);
+        cout << endl;
 
         count++;
     }
@@ -229,17 +277,26 @@ void forecast() {
 
     double avg = savings/count;
 
-    cout << "Current savings: " << savings << endl;
-    cout << "Average monthly change: " << (avg >= 0 ? "+" : "") << round2(avg) << endl;
+    cout << "Current savings: ";
+    print2(savings);
+    cout << endl;
+
+    cout << "Average monthly change: " << (avg >= 0 ? "+" : "");
+    print2(avg);
+    cout << endl;
 
     if (avg >= 0) {
         double predicted = savings + monthsAhead * avg;
+
         cout << "Predicted savings after " << monthsAhead
-        << " months: " << (predicted >= 0 ? "+" : "") << round2(predicted) << endl;
+        << " months: " << (predicted >= 0 ? "+" : "");
+        print2(predicted);
+        cout << endl;
     }
     else {
         int runOutOfMoney = 0;
         double temp = savings;
+
         while (temp > 0) {
             temp += avg;
             runOutOfMoney++;
@@ -293,6 +350,5 @@ void forecast() {
 
 int main()
 {
-    char command[10];
-
+    
 }
