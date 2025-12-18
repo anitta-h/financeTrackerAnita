@@ -11,6 +11,18 @@ const char* monthNames[12] = {
     "July", "August", "September", "October", "November", "December"
 };
 
+double ceil(double x, int digits) {
+    double factor = 1.0;
+    for (int i = 0; i < digits; i++) factor *= 10.0;
+
+    double temp = x * factor;
+    temp = (int)temp;          
+    if (x * factor > temp)   
+        temp += 1;
+
+    return temp / factor;
+}
+
 bool equals(const char* a, const char* b) {
     int i = 0;
     while (a[i] != '\0' && b[i] != '\0') {
@@ -131,8 +143,9 @@ int count = 0;
             print2(totalExpenses);
             cout << endl;
 
-            cout << "Average balance: " << (totalBalance >= 0 ? "+" : "");
-            print2(totalBalance / count);
+            double avg = totalBalance / count;
+            cout << "Average balance: " << (avg >= 0 ? "+" : "");
+            print2(ceil(avg, 2));
             cout << endl;
         }
         else {
@@ -167,7 +180,7 @@ void search() {
     double ratio = 0.0;
 
     if(income[index] != 0) {
-     ratio = round2((expense[index] / income[index]) * 100);
+     ratio = ceil((expense[index] / income[index]) * 100, 1);
     }
     
     cout << "Income: ";
@@ -183,7 +196,7 @@ void search() {
     cout << endl;
 
     cout << "Expense ratio: ";
-    print2(ratio);
+    cout << ratio;
     cout << "%\n";
     }
 
@@ -282,7 +295,7 @@ void forecast() {
     cout << endl;
 
     cout << "Average monthly change: " << (avg >= 0 ? "+" : "");
-    print2(avg);
+    print2(ceil(avg, 2));
     cout << endl;
 
     if (avg >= 0) {
@@ -290,7 +303,7 @@ void forecast() {
 
         cout << "Predicted savings after " << monthsAhead
         << " months: " << (predicted >= 0 ? "+" : "");
-        print2(predicted);
+        print2(ceil(predicted, 2));
         cout << endl;
     }
     else {
@@ -350,5 +363,79 @@ void forecast() {
 
 int main()
 {
-    
+    char command[15];
+
+    while (true) {
+        cout << "> ";
+        cin >> command;
+
+        switch (command[0]) {
+
+        case 's':
+            if (equals(command, "setup")) {
+                setup();
+            }
+            else if (equals(command, "search")) {
+                search();
+            }
+            else if (equals(command, "sort")) {
+                sort();
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        case 'a':
+            if (equals(command, "add")) {
+                add();
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        case 'r':
+            if (equals(command, "report")) {
+                report();
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        case 'f':
+            if (equals(command, "forecast")) {
+                forecast();
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        case 'c':
+            if (equals(command, "chart")) {
+                //chart();
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        case 'e':
+            if (equals(command, "exit")) {
+                cout << "Final report:\n";
+                report();
+                cout << "Exiting program.\n";
+                return 0;
+            }
+            else {
+                cout << "Unknown command!\n";
+            }
+            break;
+
+        default:
+            cout << "Unknown command!\n";
+        }
+    }
 }
