@@ -5,6 +5,8 @@ const int MAX_MONTHS = 12;
 const int COMMAND_MAX_LEN = 15;
 const int MONTH_NAME_LEN = 10;
 const int SORT_TYPE_LEN = 12;
+const int MONTH_ABBR_LEN = 3;
+const int TOP_MONTHS = 3;
 
 int monthsCount = 0;
 
@@ -55,7 +57,7 @@ bool compareFirst3(const char* a, const char* b) {
 }
 
 void printMonth3(int index) {
-    for (int j = 0; j < 3; j++)
+    for (int j = 0; j < MONTH_ABBR_LEN; j++)
         cout << monthNames[index][j];
 }
 
@@ -279,7 +281,7 @@ void sort() {
     cout << "Sorted by monthly " << type << ":\n";
 
     int count = 0;
-    for (int i = 0; i < monthsCount && count < 3; i++) {
+    for (int i = 0; i < monthsCount && count < TOP_MONTHS; i++) {
         int idxMonth = idx[i];
         if (!hasInfo[idxMonth]) continue;
 
@@ -320,7 +322,7 @@ void forecast() {
         return;
     }
 
-    double avg = savings/count;
+    double avg = savings / count;
 
     cout << "Current savings: ";
     print2(savings);
