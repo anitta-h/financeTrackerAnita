@@ -12,7 +12,7 @@ double income[MAX_MONTHS];
 double expense[MAX_MONTHS];
 bool hasInfo[MAX_MONTHS];
 
-const char* monthNames[12] = {
+const char* monthNames[MAX_MONTHS] = {
     "January", "February", "March", "April", "May", "Junå",
     "July", "August", "September", "October", "November", "December"
 };
@@ -186,7 +186,7 @@ void report() {
 }
 
 void search() {
-    char monthSearch[10];
+    char monthSearch[MONTH_NAME_LEN];
     cout << "Search ";
     cin >> monthSearch;
 
@@ -234,7 +234,7 @@ void search() {
 
 
 void sort() {
-    char type[12];
+    char type[SORT_TYPE_LEN];
     cout << "sort ";
     cin >> type;
 
@@ -391,83 +391,35 @@ void forecast() {
     cout << endl;
 }*/
 
+void processCommand(const char* command) {
+    if (equals(command, "setup")) {
+        setup();
+    }
+    else if (equals(command, "add")) {
+        add();
+    }
+    else if (equals(command, "report")) {
+        report();
+    }
+    else if (equals(command, "search")) {
+        search();
+    }
+    else if (equals(command, "forecast")) {
+        forecast();
+    }
+    else if (equals(command, "exit")) {
+        cout << "Final report:\n";
+        report();
+        cout << "Exiting program.\n";
+        exit(0);
+    }
+    else {
+        cout << "Unknown command!\n";
+    }
+}
 
 
 int main()
 {
-    char command[15];
-
-    while (true) {
-        cout << "> ";
-        cin >> command;
-
-        switch (command[0]) {
-
-        case 's':
-            if (equals(command, "setup")) {
-                setup();
-            }
-            else if (equals(command, "search")) {
-                search();
-            }
-            else if (equals(command, "sort")) {
-                sort();
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        case 'a':
-            if (equals(command, "add")) {
-                add();
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        case 'r':
-            if (equals(command, "report")) {
-                report();
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        case 'f':
-            if (equals(command, "forecast")) {
-                forecast();
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        case 'c':
-            if (equals(command, "chart")) {
-                //chart();
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        case 'e':
-            if (equals(command, "exit")) {
-                cout << "Final report:\n";
-                report();
-                cout << "Exiting program.\n";
-                return 0;
-            }
-            else {
-                cout << "Unknown command!\n";
-            }
-            break;
-
-        default:
-            cout << "Unknown command!\n";
-        }
-    }
+    
 }
