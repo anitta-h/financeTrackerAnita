@@ -307,10 +307,16 @@ void sort() {
 
 }
 
-void forecast() {
+/*void forecast() {
     int monthsAhead;
     cout << "Months ahead: ";
     cin >> monthsAhead;
+
+    if (monthsAhead > monthsCount) {
+        cout << "Warning: You entered more months ahead than available data ("
+            << monthsCount << " months). Calculation will use only available months.\n";
+        monthsAhead = monthsCount;
+    }
 
     double savings = 0;
     int count = 0;
@@ -356,7 +362,77 @@ void forecast() {
         cout << "Expected to run out of money after "
             << runOutOfMoney << " months.\n";
     }
+}*/
+void calculateSavings(int monthsAhead, double& savings, double& avg, int& count) {
+    savings = 0;
+    count = 0;
+
+    for (int i = 0; i < monthsAhead; i++) {
+        if (hasInfo[i]) {
+            savings += income[i] - expense[i];
+            count++;
+        }
+    }
+
+    if (count > 0) {
+        avg = savings / count;
+    }
+    else {
+        avg = 0;
+    }
 }
+
+void predictFuture(int monthsAhead, double savings, double avg) {
+    if (avg >= 0) {
+        double predicted = savings + monthsAhead * avg;
+        cout << "Predicted savings after " << monthsAhead
+            << " months: " << (predicted >= 0 ? "+" : "");
+        print2(ceil(predicted, 2));
+        cout << endl;
+    }
+    else {
+        int runOutOfMoney = 0;
+        double temp = savings;
+        while (temp > 0) {
+            temp += avg;
+            runOutOfMoney++;
+        }
+        cout << "Expected to run out of money after "
+            << runOutOfMoney << " months.\n";
+    }
+}
+
+void forecast() {
+    int monthsAhead;
+    cout << "Months ahead: ";
+    cin >> monthsAhead;
+
+    if (monthsAhead > monthsCount) {
+        cout << "Warning: You entered more months ahead than available data ("
+            << monthsCount << " months). Calculation will use only available months.\n";
+        monthsAhead = monthsCount;
+    }
+
+    double savings, avg;
+    int count;
+    calculateSavings(monthsAhead, savings, avg, count);
+
+    if (count == 0) {
+        cout << "No data.\n";
+        return;
+    }
+
+    cout << "Current savings: ";
+    print2(savings);
+    cout << endl;
+
+    cout << "Average monthly change: " << (avg >= 0 ? "+" : "");
+    print2(ceil(avg, 2));
+    cout << endl;
+
+    predictFuture(monthsAhead, savings, avg);
+}
+
 void chart() {
     if (monthsCount == 0) {
         cout << "No data.\n";
