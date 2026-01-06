@@ -1,6 +1,6 @@
 #include <iostream>
 using namespace std;
-//CHART, DOUBLE .00
+
 const int MAX_MONTHS = 12;
 const int COMMAND_MAX_LEN = 15;
 const int MONTH_NAME_LEN = 10;
@@ -27,12 +27,17 @@ double ceil(double x, int digits) {
     }
 
     double temp = x * factor;
-    int truncated = (int)temp;          
-    if (temp>truncated) {
-        temp += 1;
+
+    if (x >= 0) {
+        temp = (int)temp;
+        if (x * factor > temp) temp += 1;
+    }
+    else {
+        temp = (int)temp;
+        if (x * factor < temp) temp -= 1;
     }
 
-    return truncated / factor;
+    return temp / factor;
 }
 
 bool equals(const char* a, const char* b) {
