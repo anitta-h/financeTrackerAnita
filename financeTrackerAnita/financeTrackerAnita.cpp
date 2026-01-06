@@ -350,46 +350,94 @@ void forecast() {
             << runOutOfMoney << " months.\n";
     }
 }
-//TODO
-/*void chart() {
-    const int STEP = 500;
-
-    double maxIncome = 0;
-    for (int i = 0; i < monthsCount; i++) {
-        if (hasInfo[i] && income[i] > maxIncome)
-            maxIncome = income[i];
+void chart() {
+    if (monthsCount == 0) {
+        cout << "No data.\n";
+        return;
     }
 
-    if (maxIncome == 0) {
-        cout << "No data available.\n";
+    bool hasAnyData = false;
+    double minBalance = 0;
+    double maxBalance = 0;
+
+    for (int i = 0; i < monthsCount; i++) {
+        if (hasInfo[i]) {
+            double balance = income[i] - expense[i];
+
+            if (!hasAnyData) {
+                minBalance = balance;
+                maxBalance = balance;
+                hasAnyData = true;
+            }
+            else {
+                if (balance < minBalance) {
+                    minBalance = balance;
+                }
+                if (balance > maxBalance) {
+                    maxBalance = balance;
+                }
+            }
+        }
+    }
+
+    if (!hasAnyData) {
+        cout << "No data.\n";
         return;
     }
 
     cout << "=== YEARLY FINANCIAL CHART ===\n";
 
-    for (int level = (int)maxIncome; level > 0; level -= STEP) {
-        if (level < 1000) cout << "   "; 
-        cout << level << " | ";
+    double range = maxBalance - minBalance;
+    int levels = 10;
+    double step = range / levels;
+
+    if (step <= 0) {
+        step = 1;
+    }
+
+    for (double level = maxBalance; level >= minBalance; level -= step) {
+        int printedLevel = (int)level;
+
+        if (printedLevel >= 0 && printedLevel < 1000) {
+            cout << " ";
+        }
+        if (printedLevel >= -999 && printedLevel < 0) {
+            cout << " ";
+        }
+
+        cout << printedLevel << " | ";
 
         for (int m = 0; m < monthsCount; m++) {
-            if (hasInfo[m] && income[m] >= level)
-                cout << "#   ";
-            else
-                cout << "    ";
+            if (hasInfo[m]) {
+                double balance = income[m] - expense[m];
+                if (balance >= level) {
+                    cout << "# ";
+                }
+                else {
+                    cout << "  ";
+                }
+            }
+            else {
+                cout << "  ";
+            }
         }
         cout << endl;
     }
 
-    cout << "       ";
-    for (int i = 0; i < monthsCount; i++)
-        cout << "----";
+    cout << "      ";
+    for (int i = 0; i < monthsCount; i++) {
+        cout << "--";
+    }
     cout << endl;
 
-    cout << "        ";
-    for (int i = 0; i < monthsCount; i++)
-        cout << monthNames[i][0] << monthNames[i][1] << monthNames[i][2] << " ";
+    cout << "      ";
+    for (int i = 0; i < monthsCount; i++) {
+        printMonth3(i);
+        cout << " ";
+    }
     cout << endl;
-}*/
+}
+
 
 void processCommand(const char* command) {
     if (equals(command, "setup")) {
@@ -400,6 +448,12 @@ void processCommand(const char* command) {
     }
     else if (equals(command, "report")) {
         report();
+    }
+    else if (equals(command, "sort")) {
+        sort();
+    }
+    else if (equals(command, "chart")) {
+        chart();
     }
     else if (equals(command, "search")) {
         search();
@@ -421,5 +475,13 @@ void processCommand(const char* command) {
 
 int main()
 {
-    
+    char command[COMMAND_MAX_LEN];
+
+    while (true) {
+        cout << "> ";
+        cin >> command;
+        processCommand(command);
+    }
+
+    return 0;
 }
