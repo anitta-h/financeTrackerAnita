@@ -1,11 +1,17 @@
 #include <iostream>
 using namespace std;
-//CHART, MAIN, DOUBLE .00
+//CHART, DOUBLE .00
 const int MAX_MONTHS = 12;
+const int COMMAND_MAX_LEN = 15;
+const int MONTH_NAME_LEN = 10;
+const int SORT_TYPE_LEN = 12;
+
 int monthsCount = 0;
+
 double income[MAX_MONTHS];
 double expense[MAX_MONTHS];
 bool hasInfo[MAX_MONTHS];
+
 const char* monthNames[12] = {
     "January", "February", "March", "April", "May", "Junå",
     "July", "August", "September", "October", "November", "December"
@@ -13,20 +19,26 @@ const char* monthNames[12] = {
 
 double ceil(double x, int digits) {
     double factor = 1.0;
-    for (int i = 0; i < digits; i++) factor *= 10.0;
+
+    for (int i = 0; i < digits; i++) {
+        factor *= 10.0;
+    }
 
     double temp = x * factor;
-    temp = (int)temp;          
-    if (x * factor > temp)   
+    int truncated = (int)temp;          
+    if (temp>truncated) {
         temp += 1;
+    }
 
-    return temp / factor;
+    return truncated / factor;
 }
 
 bool equals(const char* a, const char* b) {
     int i = 0;
     while (a[i] != '\0' && b[i] != '\0') {
-        if (a[i] != b[i]) return false;
+        if (a[i] != b[i]) {
+        return false;
+        }
         i++;
     }
     return a[i] == '\0' && b[i] == '\0';
@@ -34,13 +46,17 @@ bool equals(const char* a, const char* b) {
 
 bool compareFirst3(const char* a, const char* b) {
     for (int i = 0; i < 3; i++) {
-        if (a[i] != b[i]) return false;
+        if (a[i] != b[i]) {
+        return false;
+        }
     }
+
     return true; 
 }
-void printMonth3(int i) {
+
+void printMonth3(int index) {
     for (int j = 0; j < 3; j++)
-        cout << monthNames[i][j];
+        cout << monthNames[index][j];
 }
 
 double round2(double x) {
@@ -51,10 +67,16 @@ void print2(double x) {
 
     int whole = (int)x;
     int frac = (int)((x - whole) * 100);
-    if (frac < 0) frac = -frac;
+    if (frac < 0) {
+        frac = -frac;
+    }
 
     cout << whole << ".";
-    if (frac < 10) cout << "0";
+
+    if (frac < 10) {
+    cout << "0";
+    }
+
     cout << frac;
 }
 
@@ -63,6 +85,13 @@ void setup() {
 
     cout << "Enter number of months: ";
     cin >> monthsCount;
+
+    if (monthsCount < 1 || monthsCount > MAX_MONTHS) {
+        cout << "Invalid number of months!\n";
+        monthsCount = 0;
+        return;
+    }
+
 
     for (int i = 0; i < monthsCount; i++) {
         income[i] = 0;
@@ -95,7 +124,8 @@ void add() {
     hasInfo[index] = true;
 
     double balanceForMonth = round2(income[index] - expense[index]);
-    cout << "Balance for " << month << " = "
+
+    cout << "Balance for " << monthNames[index] << " = "
         << (balanceForMonth >= 0 ? "+" : ""); 
         print2(balanceForMonth);
         cout << endl;
@@ -106,55 +136,57 @@ void report() {
     double totalIncome = 0;
     double totalExpenses = 0;
     double totalBalance = 0;
-
-int count = 0;
+    int count = 0;
 
     cout << "Month | Income | Expense | Balance" <<endl;
     cout << "----------------------------------\n";
 
     for (int i = 0; i < monthsCount; i++) {
-        if (hasInfo[i]) {
-            double balance = income[i] - expense[i];
-            totalIncome = round2(totalIncome + income[i]);
-            totalExpenses = round2(totalExpenses + expense[i]);
-            totalBalance = round2(totalBalance + balance);
-
-            printMonth3(i);
-            cout << " | ";
-            print2(income[i]);
-            cout << " | ";
-            print2(income[i]);
-            cout << " | " << (balance >= 0 ? "+" : "");
-            print2(balance);
-            cout << endl;
-
-
-            count++;
+        if (!hasInfo[i]) {
+            continue;
         }
+
+        double balance = income[i] - expense[i];
+
+        totalIncome += income[i];
+        totalExpenses += expense[i];
+        totalBalance += balance;
+
+        printMonth3(i);
+        cout << " | ";
+        print2(income[i]);
+        cout << " | ";
+        print2(expense[i]);
+        cout << " | " << (balance >= 0 ? "+" : "");
+        print2(balance);
+        cout << endl;
+
+        count++;
     }
-        cout << "----------------------------------\n";
 
-        if (count > 0) {
-            cout << "Total income: ";
-            print2(totalIncome);
-            cout << endl;
+    cout << "----------------------------------\n";
 
-            cout << "Total expense: ";
-            print2(totalExpenses);
-            cout << endl;
-
-            double avg = totalBalance / count;
-            cout << "Average balance: " << (avg >= 0 ? "+" : "");
-            print2(ceil(avg, 2));
-            cout << endl;
-        }
-        else {
-            cout << "No data available.\n";
-        }
+    if (count == 0) {
+        cout << "No data available.\n";
+        return;
     }
+
+    cout << "Total income: ";
+    print2(totalIncome);
+    cout << endl;
+
+    cout << "Total expense: ";
+    print2(totalExpenses);
+    cout << endl;
+
+    double avg = totalBalance / count;
+    cout << "Average balance: " << (avg >= 0 ? "+" : "");
+    print2(ceil(avg, 2));
+    cout << endl;
+}
 
 void search() {
-     char monthSearch[10];
+    char monthSearch[10];
     cout << "Search ";
     cin >> monthSearch;
 
@@ -179,10 +211,10 @@ void search() {
     double balance = income[index] - expense[index];
     double ratio = 0.0;
 
-    if(income[index] != 0) {
-     ratio = ceil((expense[index] / income[index]) * 100, 1);
+    if (income[index] != 0) {
+        ratio = ceil((expense[index] / income[index]) * 100, 1);
     }
-    
+
     cout << "Income: ";
     print2(income[index]);
     cout << endl;
@@ -198,7 +230,7 @@ void search() {
     cout << "Expense ratio: ";
     cout << ratio;
     cout << "%\n";
-    }
+}
 
 
 void sort() {
