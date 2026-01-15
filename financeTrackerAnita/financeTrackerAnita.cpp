@@ -297,23 +297,30 @@ void sort(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     cout << "Sorted by monthly " << type << ":\n";
 
     int count = 0;
+    int displayNumber = 1;
     for (int i = 0; i < monthsCount && count < TOP_MONTHS; i++) {
         int idxMonth = idx[i];
-        if (!hasInfo[idxMonth]) continue;
+        if (!hasInfo[idxMonth]) {
+             continue;
+        }
 
         double value = 0;
-        if (compareFirst3(type, "inc")) value = income[idxMonth];
-        else if (compareFirst3(type, "exp")) value = expense[idxMonth];
-        else if (compareFirst3(type, "bal")) value = income[idxMonth] - expense[idxMonth];
+        if (compareFirst3(type, "inc")) {
+             value = income[idxMonth];
+         } else if (compareFirst3(type, "exp")) {
+             value = expense[idxMonth];
+         } else if (compareFirst3(type, "bal")) {
+         value = income[idxMonth] - expense[idxMonth];
+         }
 
-        char signChar = (compareFirst3(type, "bal") && value >= 0) ? '+' : '\0';
+         cout << displayNumber << ". ";
+         printMonth3(idxMonth);
+         cout << ": " << (value >= 0 && compareFirst3(type, "bal") ? "+" : "");
+         print2(value);
+         cout << endl;
 
-        printMonth3(idxMonth);
-        cout << ": " << (value >= 0 && compareFirst3(type, "bal") ? "+" : "");
-        print2(value);
-        cout << endl;
-
-        count++;
+         count++;
+         displayNumber++;
     }
 
 }
@@ -500,12 +507,6 @@ void processCommand(const char* command, int& monthsCount, double income[], doub
     else if (equals(command, "forecast")) {
         forecast(monthsCount, income, expense, hasInfo);
     }
-    else if (equals(command, "exit")) {
-        cout << "Final report:\n";
-        report(monthsCount, income, expense, hasInfo);
-        cout << "Exiting program.\n";
-        shouldExit = true;
-    }
     else {
         cout << "Unknown command!\n";
     }
@@ -523,8 +524,13 @@ int main()
     while (true) {
         cout << "> ";
         cin >> command;
+        if (equals(command, "exit")) {
+            cout << "Final report:\n";
+            report(monthsCount, income, expense, hasInfo);
+            cout << "Exiting program.\n";
+            break;
+        }
         processCommand(command, monthsCount, income, expense, hasInfo);
     }
-
     return 0;
 }
