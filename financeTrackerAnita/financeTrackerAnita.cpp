@@ -1,3 +1,18 @@
+/**
+*
+* Solution to course project #3
+* Introduction to programming course
+* Faculty of Mathematics and Informatics of Sofia University
+* Winter semester 2025/2026
+*
+* @author <Anita Hadzhilambreva>
+* @idnumber 1MI0600604
+* @compiler VC
+*
+* <file with helper functions>
+*
+*/
+
 #include <iostream>
 using namespace std;
 
@@ -7,6 +22,7 @@ const int MONTH_NAME_LEN = 10;
 const int SORT_TYPE_LEN = 12;
 const int MONTH_ABBR_LEN = 3;
 const int TOP_MONTHS = 3;
+bool shouldExit = false;
 
 int monthsCount = 0;
 
@@ -52,7 +68,7 @@ bool equals(const char* a, const char* b) {
 }
 
 bool compareFirst3(const char* a, const char* b) {
-    for (int i = 0; i < 3; i++) {
+    for (int i = 0; i < TOP_MONTHS; i++) {
         if (a[i] != b[i]) {
         return false;
         }
@@ -492,7 +508,7 @@ void processCommand(const char* command) {
         cout << "Final report:\n";
         report();
         cout << "Exiting program.\n";
-        exit(0);
+        shouldExit = true;
     }
     else {
         cout << "Unknown command!\n";
