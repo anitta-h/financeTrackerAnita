@@ -24,11 +24,6 @@ const int MONTH_ABBR_LEN = 3;
 const int TOP_MONTHS = 3;
 bool shouldExit = false;
 
-int monthsCount = 0;
-
-double income[MAX_MONTHS];
-double expense[MAX_MONTHS];
-bool hasInfo[MAX_MONTHS];
 
 const char* monthNames[MAX_MONTHS] = {
     "January", "February", "March", "April", "May", "Junå",
@@ -104,7 +99,7 @@ void print2(double x) {
 }
 
 
-void setup() {
+void setup(int& monthsCount, bool hasInfo[], double income[], double expense[]) {
 
     cout << "Enter number of months: ";
     cin >> monthsCount;
@@ -125,7 +120,7 @@ void setup() {
     cout << "Profile created successfully.\n";
 }
 
-void add() {
+void add(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     int month;
     
     cout << "Month: ";
@@ -155,7 +150,7 @@ void add() {
 }
 
 
-void report() {
+void report(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     double totalIncome = 0;
     double totalExpenses = 0;
     double totalBalance = 0;
@@ -208,7 +203,7 @@ void report() {
     cout << endl;
 }
 
-void search() {
+void search(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     char monthSearch[MONTH_NAME_LEN];
     cout << "Search ";
     cin >> monthSearch;
@@ -256,7 +251,7 @@ void search() {
 }
 
 
-void sort() {
+void sort(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     char type[SORT_TYPE_LEN];
     cout << "sort ";
     cin >> type;
@@ -323,7 +318,8 @@ void sort() {
 
 }
 
-void calculateSavings(int monthsAhead, double& savings, double& avg, int& count) {
+void calculateSavings(int monthsAhead, double& savings, double& avg, int& count,
+                      int monthsCount, double income[], double expense[], bool hasInfo[]) {
     savings = 0;
     count = 0;
 
@@ -362,7 +358,7 @@ void predictFuture(int monthsAhead, double savings, double avg) {
     }
 }
 
-void forecast() {
+void forecast(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     int monthsAhead;
     cout << "Months ahead: ";
     cin >> monthsAhead;
@@ -375,7 +371,7 @@ void forecast() {
 
     double savings, avg;
     int count;
-    calculateSavings(monthsAhead, savings, avg, count);
+    calculateSavings(monthsAhead, savings, avg, count, monthsCount, income, expense, hasInfo);
 
     if (count == 0) {
         cout << "No data.\n";
@@ -393,7 +389,7 @@ void forecast() {
     predictFuture(monthsAhead, savings, avg);
 }
 
-void chart() {
+void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     if (monthsCount == 0) {
         cout << "No data.\n";
         return;
@@ -482,31 +478,31 @@ void chart() {
 }
 
 
-void processCommand(const char* command) {
+void processCommand(const char* command, int& monthsCount, double income[], double expense[], bool hasInfo[]) {
     if (equals(command, "setup")) {
-        setup();
+        setup(monthsCount, hasInfo, income, expense);
     }
     else if (equals(command, "add")) {
-        add();
+        add(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "report")) {
-        report();
+        report(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "sort")) {
-        sort();
+        sort(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "chart")) {
-        chart();
+        chart(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "search")) {
-        search();
+        search(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "forecast")) {
-        forecast();
+        forecast(monthsCount, income, expense, hasInfo);
     }
     else if (equals(command, "exit")) {
         cout << "Final report:\n";
-        report();
+        report(monthsCount, income, expense, hasInfo);
         cout << "Exiting program.\n";
         shouldExit = true;
     }
@@ -519,11 +515,15 @@ void processCommand(const char* command) {
 int main()
 {
     char command[COMMAND_MAX_LEN];
+    int monthsCount = 0;
+    double income[MAX_MONTHS];
+    double expense[MAX_MONTHS];
+    bool hasInfo[MAX_MONTHS];
 
     while (true) {
         cout << "> ";
         cin >> command;
-        processCommand(command);
+        processCommand(command, monthsCount, income, expense, hasInfo);
     }
 
     return 0;
