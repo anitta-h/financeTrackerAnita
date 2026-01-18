@@ -531,81 +531,62 @@ bool findMinMaxBalance(int monthsCount,
     return hasAnyData;
 }
 
-void printChartBody(int monthsCount,
-    double income[],
-    double expense[],
-    bool hasInfo[],
-    double minBalance,
-    double maxBalance) {
+void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     cout << "=== YEARLY FINANCIAL CHART ===\n";
 
-    double range = maxBalance - minBalance;
-    int levels = 10;
-    double step = range / levels;
-
-    if (step <= 0) {
-        step = 1;
+    double maxVal = 0;
+    bool anyData = false;
+    for (int i = 0; i < monthsCount; i++) {
+        if (hasInfo[i]) {
+            anyData = true;
+            if (income[i] > maxVal) maxVal = income[i];
+            if (expense[i] > maxVal) maxVal = expense[i];
+        }
     }
 
-    for (double level = maxBalance; level >= minBalance; level -= step) {
-        int printedLevel = (int)level;
+    if (!anyData) {
+        cout << "No data available to display chart.\n";
+        return;
+    }
 
-        if (printedLevel >= 0 && printedLevel < 1000) cout << " ";
-        if (printedLevel >= -999 && printedLevel < 0) cout << " ";
+    
+    int startLevel = ((int)(maxVal / 500)) * 500;
+    if (startLevel < 500) startLevel = 500;
 
-        cout << printedLevel << " | ";
+    for (int currentLevel = startLevel; currentLevel >= 500; currentLevel -= 500) {
+        if (currentLevel < 1000) cout << " ";
+        cout << currentLevel << " | ";
 
-        for (int m = 0; m < monthsCount; m++) {
-            if (hasInfo[m]) {
-                double balance = income[m] - expense[m];
-                if (balance >= level) {
-                    cout << "# ";
+        for (int j = 0; j < monthsCount; j++) {
+            if (hasInfo[j]) {
+                if (income[j] >= currentLevel || expense[j] >= currentLevel) {
+                    cout << " #  "; 
                 }
                 else {
-                    cout << "  ";
+                    cout << "    ";
                 }
-            }
-            else {
-                cout << "  ";
             }
         }
         cout << endl;
     }
 
-    cout << "      ";
+    cout << "     " << "-------"; 
     for (int i = 0; i < monthsCount; i++) {
-        cout << "--";
+        if (hasInfo[i]) cout << "----";
     }
     cout << endl;
 
-    cout << "      ";
+    cout << "       "; 
     for (int i = 0; i < monthsCount; i++) {
-        printMonth3(i);
-        cout << " ";
+        if (hasInfo[i]) {
+            for (int k = 0; k < 3; k++) {
+                cout << monthNames[i][k];
+            }
+            cout << " "; 
+        }
     }
-    cout << endl;
+    cout << endl << endl;
 }
-
-void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
-    if (monthsCount == 0) {
-        cout << "No data.\n";
-        return;
-    }
-
-    double minBalance, maxBalance;
-
-    if (!findMinMaxBalance(monthsCount, income, expense, hasInfo,
-        minBalance, maxBalance)) {
-        cout << "No data.\n";
-        return;
-    }
-
-    printChartBody(monthsCount, income, expense, hasInfo,
-        minBalance, maxBalance);
-
-    cout << "\n";
-}
-
 
 
 void processCommand(const char* command, int& monthsCount, double income[], double expense[], bool hasInfo[]) {
