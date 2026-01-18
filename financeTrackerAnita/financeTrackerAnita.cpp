@@ -22,11 +22,9 @@ const int MONTH_NAME_LEN = 10;
 const int SORT_TYPE_LEN = 12;
 const int MONTH_ABBR_LEN = 3;
 const int TOP_MONTHS = 3;
-bool shouldExit = false;
-
 
 const char* monthNames[MAX_MONTHS] = {
-    "January", "February", "March", "April", "May", "Junå",
+    "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
 };
 
@@ -126,14 +124,25 @@ void print2(double x) {
 
 void setup(int& monthsCount, bool hasInfo[], double income[], double expense[]) {
 
-    cout << "Enter number of months: ";
-    cin >> monthsCount;
+    while (true) {
+        cout << "Enter number of months: ";
+        cin >> monthsCount;
 
-    if (monthsCount < 1 || monthsCount > MAX_MONTHS) {
-        cout << "Invalid number of months!\n";
-        monthsCount = 0;
-        return;
+        if (cin.fail()) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        if (monthsCount < 1 || monthsCount > MAX_MONTHS) {
+            cout << "Invalid number of months!\n";
+            continue;
+        }
+
+        break;
     }
+
 
 
     for (int i = 0; i < monthsCount; i++) {
@@ -148,28 +157,59 @@ void setup(int& monthsCount, bool hasInfo[], double income[], double expense[]) 
 
 void add(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     int month;
-    
-    cout << "Enter month(1-12): ";
-    cin >> month;
 
-    if (month < 1 || month > monthsCount) {
-        cout << "Invalid month!\n";
-        return;
+    while (true) {
+        cout << "Enter month (1-12): ";
+        cin >> month;
+
+        if (cin.fail()) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        if (month < 1 || month > monthsCount) {
+            cout << "Invalid month!\n";
+            continue;
+        }
+
+        break;
     }
 
     int index = month - 1;
 
-    cout << "Enter income: ";
-    cin >> income[index];
+    while (true) {
+        cout << "Enter income: ";
+        cin >> income[index];
 
-    cout << "Enter expense: ";
-    cin >> expense[index];
+        if (cin.fail()) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+        break;
+    }
+
+    while (true) {
+        cout << "Enter expense: ";
+        cin >> expense[index];
+
+        if (cin.fail()) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+        break;
+    }
 
     hasInfo[index] = true;
 
     double balanceForMonth = round2(income[index] - expense[index]);
 
-    cout << "Balance for " << monthNames[index] << " = "
+    cout << "Balance for " << monthNames[index] << " : "
         << (balanceForMonth >= 0 ? "+" : ""); 
         print2(balanceForMonth);
         cout << "\n" << endl;
@@ -232,25 +272,32 @@ void report(int monthsCount, double income[], double expense[], bool hasInfo[]) 
 
 void search(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     char monthSearch[MONTH_NAME_LEN];
-    cout << "Search ";
-    cin >> monthSearch;
-
     int index = -1;
 
-    for (int i = 0; i < monthsCount; i++) {
-        if (compareFirst3(monthSearch, monthNames[i])) {
-            index = i;
-            break;
-        }
-    }
+    while (true) {
+        cout << "Search ";
+        cin >> monthSearch;
 
-    if (index == -1) {
-        cout << "Invalid month name!\n";
-        return;
-    }
-    if (!hasInfo[index]) {
-        cout << "There is no data for this month.\n";
-        return;
+        index = -1;
+
+        for (int i = 0; i < monthsCount; i++) {
+            if (compareFirst3(monthSearch, monthNames[i])) {
+                index = i;
+                break;
+            }
+        }
+
+        if (index == -1) {
+            cout << "Invalid month name!\n";
+            continue;
+        }
+
+        if (!hasInfo[index]) {
+            cout << "There is no data for this month.\n";
+            return;
+        }
+
+        break;
     }
 
     double balance = income[index] - expense[index];
@@ -397,8 +444,25 @@ void predictFuture(int monthsAhead, double savings, double avg) {
 
 void forecast(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     int monthsAhead;
-    cout << "Months ahead: ";
-    cin >> monthsAhead;
+
+    while (true) {
+        cout << "Months ahead: ";
+        cin >> monthsAhead;
+
+        if (cin.fail()) {
+            cout << "Invalid input! Please enter a number.\n";
+            cin.clear();
+            cin.ignore(10000, '\n');
+            continue;
+        }
+
+        if (monthsAhead < 1) {
+            cout << "Invalid number of months ahead!\n";
+            continue;
+        }
+
+        break;
+    }
 
     if (monthsAhead > monthsCount) {
         cout << "Warning: You entered more months ahead than available data ("
@@ -428,15 +492,13 @@ void forecast(int monthsCount, double income[], double expense[], bool hasInfo[]
     cout << "\n";
 }
 
-void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
-    if (monthsCount == 0) {
-        cout << "No data.\n";
-        return;
-    }
-
+bool findMinMaxBalance(int monthsCount,
+    double income[],
+    double expense[],
+    bool hasInfo[],
+    double& minBalance,
+    double& maxBalance) {
     bool hasAnyData = false;
-    double minBalance = 0;
-    double maxBalance = 0;
 
     for (int i = 0; i < monthsCount; i++) {
         if (hasInfo[i]) {
@@ -458,11 +520,15 @@ void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
         }
     }
 
-    if (!hasAnyData) {
-        cout << "No data.\n";
-        return;
-    }
+    return hasAnyData;
+}
 
+void printChartBody(int monthsCount,
+    double income[],
+    double expense[],
+    bool hasInfo[],
+    double minBalance,
+    double maxBalance) {
     cout << "=== YEARLY FINANCIAL CHART ===\n";
 
     double range = maxBalance - minBalance;
@@ -476,12 +542,8 @@ void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     for (double level = maxBalance; level >= minBalance; level -= step) {
         int printedLevel = (int)level;
 
-        if (printedLevel >= 0 && printedLevel < 1000) {
-            cout << " ";
-        }
-        if (printedLevel >= -999 && printedLevel < 0) {
-            cout << " ";
-        }
+        if (printedLevel >= 0 && printedLevel < 1000) cout << " ";
+        if (printedLevel >= -999 && printedLevel < 0) cout << " ";
 
         cout << printedLevel << " | ";
 
@@ -513,6 +575,26 @@ void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
         printMonth3(i);
         cout << " ";
     }
+    cout << endl;
+}
+
+void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
+    if (monthsCount == 0) {
+        cout << "No data.\n";
+        return;
+    }
+
+    double minBalance, maxBalance;
+
+    if (!findMinMaxBalance(monthsCount, income, expense, hasInfo,
+        minBalance, maxBalance)) {
+        cout << "No data.\n";
+        return;
+    }
+
+    printChartBody(monthsCount, income, expense, hasInfo,
+        minBalance, maxBalance);
+
     cout << "\n";
 }
 
@@ -545,6 +627,7 @@ void processCommand(const char* command, int& monthsCount, double income[], doub
     }
     else {
         cout << "Unknown command!\n";
+        cout << endl;
     }
 }
 
