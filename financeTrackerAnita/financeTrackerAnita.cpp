@@ -42,7 +42,7 @@ void printHelp() {
     cout << " sort inc|exp|bal     -> show top 3 months by income, expense or balance\n";
     cout << " search <month>       -> show detailed info for a given month\n";
     cout << " forecast             -> predict future savings\n";
-    cout << " chart                -> display yearly balance chart\n";
+    cout << " chart                -> display yearly income/expense chart\n";
     cout << " help                 -> display help information\n";
     cout << " exit                 -> show final report and exit program\n\n";
 
