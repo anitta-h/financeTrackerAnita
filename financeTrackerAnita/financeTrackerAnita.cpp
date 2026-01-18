@@ -85,14 +85,22 @@ bool equals(const char* a, const char* b) {
     return a[i] == '\0' && b[i] == '\0';
 }
 
+char toLowerCustom(char c) {
+    if (c >= 'A' && c <= 'Z') {
+        return c + ('a' - 'A');
+    }
+    return c;
+}
+
+
 bool compareFirst3(const char* a, const char* b) {
-    for (int i = 0; i < TOP_MONTHS; i++) {
-        if (a[i] != b[i]) {
-        return false;
+
+    for (int i = 0; i < 3; i++) {
+        if (toLowerCustom(a[i]) != toLowerCustom(b[i])) {
+            return false;
         }
     }
-
-    return true; 
+    return true;
 }
 
 void printMonth3(int index) {
