@@ -484,6 +484,32 @@ void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     cout << endl;
 }
 
+void printHelp() {
+    cout << "============================================\n";
+    cout << " PERSONAL FINANCE MANAGER - USER GUIDE\n";
+    cout << "============================================\n";
+    cout << "This application manages monthly incomes\n";
+    cout << "and expenses for up to 12 months.\n\n";
+
+    cout << "Available commands:\n";
+    cout << " setup                -> create profile and set number of months\n";
+    cout << " add                  -> add income and expense for a month\n";
+    cout << " report               -> show summary report for all months\n";
+    cout << " sort inc|exp|bal     -> show top 3 months by income, expense or balance\n";
+    cout << " search <month>       -> show detailed info for a given month\n";
+    cout << " forecast             -> predict future savings\n";
+    cout << " chart                -> display yearly balance chart\n";
+    cout << " help                 -> display help information\n";
+    cout << " exit                 -> show final report and exit program\n\n";
+
+    cout << "Notes:\n";
+    cout << " - Months are entered as numbers (1 - January, 12 - December)\n";
+    cout << " - Month names are matched by first 3 letters (e.g. Jan, Feb)\n";
+    cout << " - Use setup before adding data\n";
+    cout << "============================================\n\n";
+}
+
+
 
 void processCommand(const char* command, int& monthsCount, double income[], double expense[], bool hasInfo[]) {
     if (equals(command, "setup")) {
@@ -507,6 +533,9 @@ void processCommand(const char* command, int& monthsCount, double income[], doub
     else if (equals(command, "forecast")) {
         forecast(monthsCount, income, expense, hasInfo);
     }
+    else if (equals(command, "help")) {
+        printHelp();
+    }
     else {
         cout << "Unknown command!\n";
     }
@@ -520,6 +549,8 @@ int main()
     double income[MAX_MONTHS];
     double expense[MAX_MONTHS];
     bool hasInfo[MAX_MONTHS];
+
+    printHelp();
 
     while (true) {
         cout << "> ";
