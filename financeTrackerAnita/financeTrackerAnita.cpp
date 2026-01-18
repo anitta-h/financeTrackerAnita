@@ -30,6 +30,31 @@ const char* monthNames[MAX_MONTHS] = {
     "July", "August", "September", "October", "November", "December"
 };
 
+void printHelp() {
+    cout << "============================================\n";
+    cout << " PERSONAL FINANCE MANAGER - USER GUIDE\n";
+    cout << "============================================\n";
+    cout << "This application manages monthly incomes\n";
+    cout << "and expenses for up to 12 months.\n\n";
+
+    cout << "Available commands:\n";
+    cout << " setup                -> create profile and set number of months\n";
+    cout << " add                  -> add income and expense for a month\n";
+    cout << " report               -> show summary report for all months\n";
+    cout << " sort inc|exp|bal     -> show top 3 months by income, expense or balance\n";
+    cout << " search <month>       -> show detailed info for a given month\n";
+    cout << " forecast             -> predict future savings\n";
+    cout << " chart                -> display yearly balance chart\n";
+    cout << " help                 -> display help information\n";
+    cout << " exit                 -> show final report and exit program\n\n";
+
+    cout << "Notes:\n";
+    cout << " - Months are entered as numbers (1 - January, 12 - December)\n";
+    cout << " - Month names are matched by first 3 letters (e.g. Jan, Feb)\n";
+    cout << " - Use setup before adding data\n";
+    cout << "============================================\n\n";
+}
+
 double ceil(double x, int digits) {
     double factor = 1.0;
 
@@ -117,13 +142,14 @@ void setup(int& monthsCount, bool hasInfo[], double income[], double expense[]) 
         hasInfo[i] = false;
     }
 
-    cout << "Profile created successfully.\n";
+    cout << "Profile created successfully." << "\n";
+    cout << "\n";
 }
 
 void add(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     int month;
     
-    cout << "Month: ";
+    cout << "Enter month(1-12): ";
     cin >> month;
 
     if (month < 1 || month > monthsCount) {
@@ -146,7 +172,7 @@ void add(int monthsCount, double income[], double expense[], bool hasInfo[]) {
     cout << "Balance for " << monthNames[index] << " = "
         << (balanceForMonth >= 0 ? "+" : ""); 
         print2(balanceForMonth);
-        cout << endl;
+        cout << "\n" << endl;
 }
 
 
@@ -201,6 +227,7 @@ void report(int monthsCount, double income[], double expense[], bool hasInfo[]) 
     cout << "Average balance: " << (avg >= 0 ? "+" : "");
     print2(ceil(avg, 2));
     cout << endl;
+    cout << "\n";
 }
 
 void search(int monthsCount, double income[], double expense[], bool hasInfo[]) {
@@ -247,7 +274,8 @@ void search(int monthsCount, double income[], double expense[], bool hasInfo[]) 
 
     cout << "Expense ratio: ";
     cout << ratio;
-    cout << "%\n";
+    cout << "%" << endl;
+    cout << "\n";
 }
 
 
@@ -292,6 +320,7 @@ void sort(int monthsCount, double income[], double expense[], bool hasInfo[]) {
                 idx[j] = temp;
             }
         }
+
     }
 
     cout << "Sorted by monthly " << type << ":\n";
@@ -322,6 +351,7 @@ void sort(int monthsCount, double income[], double expense[], bool hasInfo[]) {
          count++;
          displayNumber++;
     }
+    cout << "\n";
 
 }
 
@@ -394,6 +424,8 @@ void forecast(int monthsCount, double income[], double expense[], bool hasInfo[]
     cout << endl;
 
     predictFuture(monthsAhead, savings, avg);
+
+    cout << "\n";
 }
 
 void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
@@ -481,32 +513,7 @@ void chart(int monthsCount, double income[], double expense[], bool hasInfo[]) {
         printMonth3(i);
         cout << " ";
     }
-    cout << endl;
-}
-
-void printHelp() {
-    cout << "============================================\n";
-    cout << " PERSONAL FINANCE MANAGER - USER GUIDE\n";
-    cout << "============================================\n";
-    cout << "This application manages monthly incomes\n";
-    cout << "and expenses for up to 12 months.\n\n";
-
-    cout << "Available commands:\n";
-    cout << " setup                -> create profile and set number of months\n";
-    cout << " add                  -> add income and expense for a month\n";
-    cout << " report               -> show summary report for all months\n";
-    cout << " sort inc|exp|bal     -> show top 3 months by income, expense or balance\n";
-    cout << " search <month>       -> show detailed info for a given month\n";
-    cout << " forecast             -> predict future savings\n";
-    cout << " chart                -> display yearly balance chart\n";
-    cout << " help                 -> display help information\n";
-    cout << " exit                 -> show final report and exit program\n\n";
-
-    cout << "Notes:\n";
-    cout << " - Months are entered as numbers (1 - January, 12 - December)\n";
-    cout << " - Month names are matched by first 3 letters (e.g. Jan, Feb)\n";
-    cout << " - Use setup before adding data\n";
-    cout << "============================================\n\n";
+    cout << "\n";
 }
 
 
